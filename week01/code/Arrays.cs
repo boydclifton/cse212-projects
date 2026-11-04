@@ -61,7 +61,7 @@ public static class Arrays
         /// cut point. We can do this with the GetRange() method, using 'cutPoint' as our 
         /// beginning index in the range and 'amount' as the number of items to be included. 
         /// 
-        /// 3. Next, we initialize our 
+        /// 3. Next, we initialize ou   r 
         /// frontHalf variable to evaluate to the list of integers that follow the cut point. We use the GetRange() method 
         /// with '0' being our beginning index and 'cutPoint' being the number of integers to include. 
         /// 
