@@ -11,7 +11,9 @@ public class TakingTurnsQueueTests
     // Scenario: Create a queue with the following people and turns: Bob (2), Tim (5), Sue (3) and
     // run until the queue is empty
     // Expected Result: Bob, Tim, Sue, Bob, Tim, Sue, Tim, Sue, Tim, Tim
-    // Defect(s) Found: No defects found.  The code passes the test as expected.
+    // Defect(s) Found: The queue was operating backwards as a Last-In, First-Out (LIFO) stack because
+    // the underlying PersonQueue class was inserting new people at the front (index 0). This was fixed 
+    // by changing .Insert(0, person) to .Add(person) so it acts as a proper First-In, First-Out (FIFO) queue.
     public void TestTakingTurnsQueue_FiniteRepetition()
     {
         var bob = new Person("Bob", 2);
@@ -43,7 +45,9 @@ public class TakingTurnsQueueTests
     // Scenario: Create a queue with the following people and turns: Bob (2), Tim (5), Sue (3)
     // After running 5 times, add George with 3 turns.  Run until the queue is empty.
     // Expected Result: Bob, Tim, Sue, Bob, Tim, Sue, Tim, George, Sue, Tim, George, Tim, George
-    // Defect(s) Found: No defects found.  The code passes the test as expected.
+    // Defect(s) Found: The queue was operating backwards as a Last-In, First-Out (LIFO) stack because
+    // the underlying PersonQueue class was inserting new people at the front (index 0). This was fixed 
+    // by changing .Insert(0, person) to .Add(person) so it acts as a proper First-In, First-Out (FIFO) queue.
     public void TestTakingTurnsQueue_AddPlayerMidway()
     {
         var bob = new Person("Bob", 2);
