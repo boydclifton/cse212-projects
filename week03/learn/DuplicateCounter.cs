@@ -45,5 +45,25 @@
         return duplicateCount;
     }
 
+    private static int CountDuplicates(char[] data)
+    {
+        var unique = new HashSet<char>();
+        int duplicateCount = 0;
+
+        foreach (var item in data)
+        {
+            if (!unique.Add(item))
+            {
+                duplicateCount++;
+            }
+            else
+            {
+                unique.Add(item);
+            }
+        }
+
+        return duplicateCount;
+    }
+
     
 }
