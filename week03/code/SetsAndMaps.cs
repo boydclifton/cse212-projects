@@ -4,7 +4,7 @@ using System.IO;
 using System.Net.Http;
 using System.Text.Json;
 
-public static class SetsAndMapsMethods
+public static class SetsAndMaps
 {
     public static string[] FindPairs(string[] words)
     {
