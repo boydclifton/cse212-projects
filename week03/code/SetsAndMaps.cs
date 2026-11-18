@@ -19,24 +19,22 @@ public static class SetsAndMaps
     /// that there were no duplicates) and therefore should not be returned.
     /// </summary>
     /// <param name="words">An array of 2-character words (lowercase, no duplicates)</param>
-    public static string[] FindPairs(int[] numbers)
+    public static string[] FindPairs(string[] words)
     {
+        var seenWords = new HashSet<string>();
         var result = new List<string>();
-        var valuesSeen = new HashSet<int>();
 
-        foreach (var x in numbers)
+        foreach (var word in words)
         {
-
-            int partner = 10 - x;
-
-
-            if (valuesSeen.Contains(partner))
+            if (word.Length == 2)
             {
-                result.Add($"{partner}, {x}");
+                string reverse = "" + word[1] + word[0];
+                if (seenWords.Contains(reverse))
+                {
+                    result.Add($"{reverse} & {word}");
+                }
+                seenWords.Add(word);
             }
-
-
-            valuesSeen.Add(x);
         }
 
         return result.ToArray();
@@ -92,6 +90,24 @@ public static class SetsAndMaps
     /// Reminder: You can access a letter by index in a string by 
     /// using the [] notation.
     /// </summary>
+    
+    /// <summary>
+    /// This function will read JSON (Javascript Object Notation) data from the 
+    /// United States Geological Service (USGS) consisting of earthquake data.
+    /// The data will include all earthquakes in the current day.
+    /// 
+    /// JSON data is organized into a dictionary. After reading the data using
+    /// the built-in HTTP client library, this function will return a list of all
+    /// earthquake locations ('place' attribute) and magnitudes ('mag' attribute).
+    /// Additional information about the format of the JSON data can be found 
+    /// at this website:  
+    /// 
+    /// https://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php
+    /// 
+    /// </summary>
+    /// 
+public class Anagrams
+{
     public static bool IsAnagram(string word1, string word2)
     {
         word1 = word1.ToLower().Replace(" ", "");
@@ -122,9 +138,9 @@ public static class SetsAndMaps
             {
                 return false;
             }
-
+            
             myDict[letter]--;
-
+            
             if (myDict[letter] < 0)
             {
                 return false;
@@ -133,21 +149,6 @@ public static class SetsAndMaps
 
         return true;
     }
-
-    /// <summary>
-    /// This function will read JSON (Javascript Object Notation) data from the 
-    /// United States Geological Service (USGS) consisting of earthquake data.
-    /// The data will include all earthquakes in the current day.
-    /// 
-    /// JSON data is organized into a dictionary. After reading the data using
-    /// the built-in HTTP client library, this function will return a list of all
-    /// earthquake locations ('place' attribute) and magnitudes ('mag' attribute).
-    /// Additional information about the format of the JSON data can be found 
-    /// at this website:  
-    /// 
-    /// https://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php
-    /// 
-    /// </summary>
     public static string[] EarthquakeDailySummary()
     {
         const string uri = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson";
