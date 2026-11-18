@@ -90,7 +90,7 @@ public static class SetsAndMaps
     /// Reminder: You can access a letter by index in a string by 
     /// using the [] notation.
     /// </summary>
-    
+
     /// <summary>
     /// This function will read JSON (Javascript Object Notation) data from the 
     /// United States Geological Service (USGS) consisting of earthquake data.
@@ -106,87 +106,88 @@ public static class SetsAndMaps
     /// 
     /// </summary>
     /// 
-public class Anagrams
-{
-    public static bool IsAnagram(string word1, string word2)
+    public class Anagrams
     {
-        word1 = word1.ToLower().Replace(" ", "");
-        word2 = word2.ToLower().Replace(" ", "");
-
-        if (word1.Length != word2.Length)
+        public static bool IsAnagram(string word1, string word2)
         {
-            return false;
-        }
+            word1 = word1.ToLower().Replace(" ", "");
+            word2 = word2.ToLower().Replace(" ", "");
 
-        var myDict = new Dictionary<char, int>();
-
-        foreach (char letter in word1)
-        {
-            if (!myDict.ContainsKey(letter))
-            {
-                myDict[letter] = 1;
-            }
-            else
-            {
-                myDict[letter]++;
-            }
-        }
-
-        foreach (char letter in word2)
-        {
-            if (!myDict.ContainsKey(letter))
+            if (word1.Length != word2.Length)
             {
                 return false;
             }
-            
-            myDict[letter]--;
-            
-            if (myDict[letter] < 0)
+
+            var myDict = new Dictionary<char, int>();
+
+            foreach (char letter in word1)
             {
-                return false;
+                if (!myDict.ContainsKey(letter))
+                {
+                    myDict[letter] = 1;
+                }
+                else
+                {
+                    myDict[letter]++;
+                }
             }
+
+            foreach (char letter in word2)
+            {
+                if (!myDict.ContainsKey(letter))
+                {
+                    return false;
+                }
+
+                myDict[letter]--;
+
+                if (myDict[letter] < 0)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
-
-        return true;
-    }
-    public static string[] EarthquakeDailySummary()
-    {
-        const string uri = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson";
-        using var client = new HttpClient();
-        using var getRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
-        using var jsonStream = client.Send(getRequestMessage).Content.ReadAsStream();
-        using var reader = new StreamReader(jsonStream);
-        var json = reader.ReadToEnd();
-        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-
-        var featureCollection = JsonSerializer.Deserialize<FeatureCollection>(json, options);
-
-        // TODO Problem 5:
-        // 1. Add code in FeatureCollection.cs to describe the JSON using classes and properties 
-        // on those classes so that the call to Deserialize above works properly.
-        // 2. Add code below to create a string out each place a earthquake has happened today and its magitude.
-        // 3. Return an array of these string descriptions.
-
-
-        var summaryList = new List<string>();
-
-        if (featureCollection?.Features != null)
+        public static string[] EarthquakeDailySummary()
         {
-            foreach (var feature in featureCollection.Features)
+            const string uri = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson";
+            using var client = new HttpClient();
+            using var getRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
+            using var jsonStream = client.Send(getRequestMessage).Content.ReadAsStream();
+            using var reader = new StreamReader(jsonStream);
+            var json = reader.ReadToEnd();
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+
+            var featureCollection = JsonSerializer.Deserialize<FeatureCollection>(json, options);
+
+            // TODO Problem 5:
+            // 1. Add code in FeatureCollection.cs to describe the JSON using classes and properties 
+            // on those classes so that the call to Deserialize above works properly.
+            // 2. Add code below to create a string out each place a earthquake has happened today and its magitude.
+            // 3. Return an array of these string descriptions.
+
+
+            var summaryList = new List<string>();
+
+            if (featureCollection?.Features != null)
             {
-                string place = feature.Properties.Place;
-                double mag = feature.Properties.Mag;
-                summaryList.Add($"{place} - Mag {mag}");
+                foreach (var feature in featureCollection.Features)
+                {
+                    string place = feature.Properties.Place;
+                    double mag = feature.Properties.Mag;
+                    summaryList.Add($"{place} - Mag {mag}");
+                }
             }
+
+            return summaryList.ToArray();
         }
 
-        return summaryList.ToArray();
+
+
+
+
+
+
     }
-
-
-
-
-
-
-
 }
