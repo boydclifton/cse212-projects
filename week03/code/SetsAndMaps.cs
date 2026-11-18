@@ -19,22 +19,24 @@ public static class SetsAndMaps
     /// that there were no duplicates) and therefore should not be returned.
     /// </summary>
     /// <param name="words">An array of 2-character words (lowercase, no duplicates)</param>
-    public static string[] FindPairs(string[] words)
+    public static string[] FindPairs(int[] numbers)
     {
-        var seenWords = new HashSet<string>();
         var result = new List<string>();
+        var valuesSeen = new HashSet<int>();
 
-        foreach (var word in words)
+        foreach (var x in numbers)
         {
-            if (word.Length == 2)
+
+            int partner = 10 - x;
+
+
+            if (valuesSeen.Contains(partner))
             {
-                string reverse = "" + word[1] + word[0];
-                if (seenWords.Contains(reverse))
-                {
-                    result.Add($"{reverse} & {word}");
-                }
-                seenWords.Add(word);
+                result.Add($"{partner}, {x}");
             }
+
+
+            valuesSeen.Add(x);
         }
 
         return result.ToArray();
@@ -57,7 +59,7 @@ public static class SetsAndMaps
         foreach (var line in File.ReadLines(filename))
         {
             var fields = line.Split(",");
-            var degree = fields[3];
+            var degree = fields[3]; 
             if (!degrees.ContainsKey(degree))
             {
                 degrees[degree] = 1;
@@ -90,6 +92,47 @@ public static class SetsAndMaps
     /// Reminder: You can access a letter by index in a string by 
     /// using the [] notation.
     /// </summary>
+    public static bool IsAnagram(string word1, string word2)
+    {
+        word1 = word1.ToLower().Replace(" ", "");
+        word2 = word2.ToLower().Replace(" ", "");
+
+        if (word1.Length != word2.Length)
+        {
+            return false;
+        }
+
+        var myDict = new Dictionary<char, int>();
+
+        foreach (char letter in word1)
+        {
+            if (!myDict.ContainsKey(letter))
+            {
+                myDict[letter] = 1;
+            }
+            else
+            {
+                myDict[letter]++;
+            }
+        }
+
+        foreach (char letter in word2)
+        {
+            if (!myDict.ContainsKey(letter))
+            {
+                return false;
+            }
+
+            myDict[letter]--;
+
+            if (myDict[letter] < 0)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
 
     /// <summary>
     /// This function will read JSON (Javascript Object Notation) data from the 
@@ -105,89 +148,44 @@ public static class SetsAndMaps
     /// https://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php
     /// 
     /// </summary>
-    /// 
-    public class Anagrams
+    public static string[] EarthquakeDailySummary()
     {
-        public static bool IsAnagram(string word1, string word2)
+        const string uri = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson";
+        using var client = new HttpClient();
+        using var getRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
+        using var jsonStream = client.Send(getRequestMessage).Content.ReadAsStream();
+        using var reader = new StreamReader(jsonStream);
+        var json = reader.ReadToEnd();
+        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+
+        var featureCollection = JsonSerializer.Deserialize<FeatureCollection>(json, options);
+
+        // TODO Problem 5:
+        // 1. Add code in FeatureCollection.cs to describe the JSON using classes and properties 
+        // on those classes so that the call to Deserialize above works properly.
+        // 2. Add code below to create a string out each place a earthquake has happened today and its magitude.
+        // 3. Return an array of these string descriptions.
+
+
+        var summaryList = new List<string>();
+
+        if (featureCollection?.Features != null)
         {
-            word1 = word1.ToLower().Replace(" ", "");
-            word2 = word2.ToLower().Replace(" ", "");
-
-            if (word1.Length != word2.Length)
+            foreach (var feature in featureCollection.Features)
             {
-                return false;
+                string place = feature.Properties.Place;
+                double mag = feature.Properties.Mag;
+                summaryList.Add($"{place} - Mag {mag}");
             }
-
-            var myDict = new Dictionary<char, int>();
-
-            foreach (char letter in word1)
-            {
-                if (!myDict.ContainsKey(letter))
-                {
-                    myDict[letter] = 1;
-                }
-                else
-                {
-                    myDict[letter]++;
-                }
-            }
-
-            foreach (char letter in word2)
-            {
-                if (!myDict.ContainsKey(letter))
-                {
-                    return false;
-                }
-
-                myDict[letter]--;
-
-                if (myDict[letter] < 0)
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-        public static string[] EarthquakeDailySummary()
-        {
-            const string uri = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson";
-            using var client = new HttpClient();
-            using var getRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
-            using var jsonStream = client.Send(getRequestMessage).Content.ReadAsStream();
-            using var reader = new StreamReader(jsonStream);
-            var json = reader.ReadToEnd();
-            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-
-            var featureCollection = JsonSerializer.Deserialize<FeatureCollection>(json, options);
-
-            // TODO Problem 5:
-            // 1. Add code in FeatureCollection.cs to describe the JSON using classes and properties 
-            // on those classes so that the call to Deserialize above works properly.
-            // 2. Add code below to create a string out each place a earthquake has happened today and its magitude.
-            // 3. Return an array of these string descriptions.
-
-
-            var summaryList = new List<string>();
-
-            if (featureCollection?.Features != null)
-            {
-                foreach (var feature in featureCollection.Features)
-                {
-                    string place = feature.Properties.Place;
-                    double mag = feature.Properties.Mag;
-                    summaryList.Add($"{place} - Mag {mag}");
-                }
-            }
-
-            return summaryList.ToArray();
         }
 
-
-
-
-
-
-
+        return summaryList.ToArray();
     }
+
+
+
+
+
+
+
 }
