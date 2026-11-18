@@ -6,6 +6,7 @@ using System.Text.Json;
 
 public static class SetsAndMaps
 {
+    
     public static string[] FindPairs(string[] words)
     {
         var seenWords = new HashSet<string>();
@@ -26,33 +27,8 @@ public static class SetsAndMaps
 
         return result.ToArray();
     }
-}
 
-public static class FindPairsMethods
-{
-    public static string[] FindPairs(int[] numbers)
-    {
-        var result = new List<string>();
-        var valuesSeen = new HashSet<int>();
-
-        foreach (var x in numbers)
-        {
-            int partner = 10 - x;
-
-            if (valuesSeen.Contains(partner))
-            {
-                result.Add($"{partner}, {x}");
-            }
-
-            valuesSeen.Add(x);
-        }
-
-        return result.ToArray();
-    }
-}
-
-public static class SummarizeDegreesMethod
-{
+    
     public static Dictionary<string, int> SummarizeDegrees(string filename)
     {
         var degrees = new Dictionary<string, int>();
@@ -72,10 +48,8 @@ public static class SummarizeDegreesMethod
 
         return degrees;
     }
-}
 
-public class Anagrams
-{
+    
     public static bool IsAnagram(string word1, string word2)
     {
         word1 = word1.ToLower().Replace(" ", "");
@@ -117,10 +91,8 @@ public class Anagrams
 
         return true;
     }
-}
 
-public static class EarthquakeDailySummaryMethod
-{
+    
     public static string[] EarthquakeDailySummary()
     {
         const string uri = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson";
@@ -146,5 +118,29 @@ public static class EarthquakeDailySummaryMethod
         }
 
         return summaryList.ToArray();
+    }
+}
+
+
+public static class FindPairsMethods
+{
+    public static string[] FindPairs(int[] numbers)
+    {
+        var result = new List<string>();
+        var valuesSeen = new HashSet<int>();
+
+        foreach (var x in numbers)
+        {
+            int partner = 10 - x;
+
+            if (valuesSeen.Contains(partner))
+            {
+                result.Add($"{partner}, {x}");
+            }
+
+            valuesSeen.Add(x);
+        }
+
+        return result.ToArray();
     }
 }
